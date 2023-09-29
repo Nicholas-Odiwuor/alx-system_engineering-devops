@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Find all subdirectories (excluding hidden directories) and add execute permissions
+find . -type d ! -path '*/.*' -exec chmod a+rx {} \;
+

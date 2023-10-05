@@ -1,1 +1,2 @@
-Shell basics
+#!/bin/bash
+pwd

@@ -16,7 +16,7 @@ service { 'nginx':
 # Configure Nginx to listen on port 80 and serve "Hello World!" at the root
 file { '/etc/nginx/sites-available/default':
   ensure  => file,
-  content => '
+  content => "
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -27,15 +27,14 @@ server {
     server_name _;
 
     location / {
-        return 301 https://$host$request_uri;
+        return 301 https://\$host\$request_uri;
     }
 
     location /redirect_me {
         return 301 https://www.example.com/;
     }
 }
-
-',
+",
   notify  => Service['nginx'],
 }
 

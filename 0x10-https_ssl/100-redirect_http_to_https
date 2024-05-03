@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Script to configure HAproxy to redirect HTTP traffic to HTTPS
+
+# Ensure HAproxy is installed
+if ! command -v haproxy &>/dev/null; then
+    echo "HAproxy is not installed. Please install it first."
+    exit 1
+fi
+
+# HAproxy configuration file path
+config_file="/etc/haproxy/haproxy.cfg"
+
+# Backup existing configuration file
+cp "$config_file" "$config_file.bak" || { echo "Failed to backup HAproxy configuration file."; exit 1; }
+
+# Configure HAproxy to redirect HTTP to HTTPS
+cat <<EOF >"$config_file"
+frontend http-in
+    bind *:80
+    mode http
+    option forwardfor
+    reqadd X-Forwarded-Proto:\ http
+    redirect scheme https code 301 if !{ ssl_fc }
+EOF
+
+# Restart HAproxy
+systemctl restart haproxy || { echo "Failed to restart HAproxy."; exit 1; }
+

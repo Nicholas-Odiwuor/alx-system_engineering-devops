@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+sed -i "s/#user www-data/user nginx/" /etc/nginx/nginx.conf
+sed -i "s/80/8080/g" /etc/nginx/sites-available/default
+chmod 644 /etc/nginx/nginx.conf
+service nginx start
+ps auxff | grep ngin[x]
+nc -z 0 8080
+

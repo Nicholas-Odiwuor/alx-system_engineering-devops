@@ -2,7 +2,7 @@
 # Script to create a MySQL user with appropriate permissions on web-01 and web-02 servers
 
 # Set MySQL root password (change this to your actual root password)
-MYSQL_ROOT_PASSWORD="your_root_password_here"
+MYSQL_ROOT_PASSWORD="254_Teh_savvy"
 
 # MySQL user credentials
 MYSQL_USER="holberton_user"

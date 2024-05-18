@@ -1,7 +1,7 @@
-#SSH into web-01
+# SSH into web-01
 ssh ubuntu@54.165.55.51
 
-#Open the UFW configuration file for editing
+# Open the UFW configuration file for editing
 sudo vi /etc/ufw/before.rules
 
 # Add the port forwarding rules
@@ -11,10 +11,13 @@ sudo vi /etc/ufw/before.rules
 -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
 COMMIT
 
-#Save the file and exit the editor.
-#Enable and reload UFW to apply the changes
+# Save the file and exit the editor.
+# Enable UFW if it is not already enabled
 sudo ufw enable
+
+# Reload UFW to apply the changes
 sudo ufw reload
 
-#To  Verify UFW status
+# Verify UFW status
 sudo ufw status
+

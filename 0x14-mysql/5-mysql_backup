@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Bash script to generate MySQL dump and create a compressed archive
+
+# Ensure correct number of arguments
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <mysql_password>"
+    exit 1
+fi
+
+# MySQL dump parameters
+MYSQL_USER="root"
+MYSQL_PASSWORD="$1"
+DUMP_FILE="backup.sql"
+ARCHIVE_NAME="$(date +%d-%m-%Y).tar.gz"
+
+# Generate MySQL dump
+mysqldump -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --all-databases > "$DUMP_FILE"
+
+# Create compressed archive
+tar -czvf "$ARCHIVE_NAME" "$DUMP_FILE"
+
+# Clean up
+rm "$DUMP_FILE"
+

@@ -1,57 +1,38 @@
 #!/usr/bin/python3
 """
-Count it script.
+Recursive function that queries the Reddit API, parses the title of all hot articles,
+and prints a sorted count of given keywords (case-insensitive).
 """
-
 import requests
-from collections import Counter
 
-
-def count_words(subreddit, word_list, after=None, keyword_count=None):
-    if keyword_count is None:
-        keyword_count = Counter()
-
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json'
+def count_words(subreddit, word_list, after=None, word_count={}):
+    """Recursively queries the Reddit API, parses titles, and counts keywords."""
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    params = {"limit": 100, "after": after}
+    
+    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
+    if response.status_code != 200:
+        return
+    
+    data = response.json().get("data", {})
+    after = data.get("after", None)
+    posts = data.get("children", [])
+    
+    for post in posts:
+        title = post["data"].get("title", "").lower().split()
+        
+        for word in word_list:
+            word_lower = word.lower()
+            count = title.count(word_lower)
+            if count > 0:
+                word_count[word_lower] = word_count.get(word_lower, 0) + count
+    
     if after:
-        url += f'?after={after}'
+        return count_words(subreddit, word_list, after, word_count)
+    
+    sorted_counts = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
+    
+    for word, count in sorted_counts:
+        print(f"{word}: {count}")
 
-    # Sets a custom User-Agent to avoid "Too Many Requests" errors
-    headers = {'User-Agent': 'My Reddit API Client'}
-
-    try:
-        # Makes HTTP GET request
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        data = response.json()
-
-        # Checks if the data contains posts.
-        if 'data' in data and 'children' in data['data']:
-            # Extract and process the titles
-            for post in data['data']['children']:
-                title = post['data']['title'].lower()
-
-                # Counts the occurrence of each word in a title
-                for keyword in word_list:
-                    keyword_count[keyword] += title.count(keyword.lower())
-
-            # Checks if there are more pages.
-            after_key = data['data']['after']
-            if after_key:
-                # Makes a recursive call.
-                return count_words(subreddit, word_list, after_key, keyword_count)
-            else:
-                sorted_counts = sorted(
-                    keyword_count.items(), key=lambda x: (-x[1], x[0].lower()))
-                for keyword, count in sorted_counts:
-                    print(f'{keyword}: {count}')
-        else:
-            print("No posts found")
-    except requests.exceptions.RequestException:
-        print("No posts found")
-
-
-if __name__ == '__main__':
-    subreddit = "programming"
-    word_list = ["java", "python", "javascript",
-                 "scala", "no_results_for_this_one"]
-    count_words(subreddit, word_list)

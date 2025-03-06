@@ -1,0 +1,24 @@
+#!/bin/bash
+# Reload Gunicorn workers gracefully without downtime
+
+# Find the Gunicorn master process ID (PID)
+GUNICORN_PID=$(pgrep -f "gunicorn")
+
+# Check if Gunicorn is running
+if [ -z "$GUNICORN_PID" ]; then
+    echo "Gunicorn is not running."
+    exit 1
+fi
+
+# Send the USR2 signal to gracefully restart Gunicorn workers
+kill -USR2 "$GUNICORN_PID"
+
+# Confirm restart
+sleep 2
+NEW_GUNICORN_PID=$(pgrep -f "gunicorn")
+if [ "$NEW_GUNICORN_PID" != "$GUNICORN_PID" ]; then
+    echo "Gunicorn reloaded successfully with new workers."
+else
+    echo "Gunicorn reload failed."
+fi
+

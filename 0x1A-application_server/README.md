@@ -3,14 +3,6 @@
 ## Background Context
 In this project, we extend our web infrastructure by adding an **Application Server** to complement our **Nginx Web Server**. While Nginx efficiently serves static content, an application server is responsible for handling dynamic requests. We will configure the application server to serve our **Airbnb Clone v2 - Web framework** project and integrate it with Nginx.
 
-## Learning Objectives
-By the end of this project, you should be able to:
-- Understand what an application server is and how it interacts with a web server.
-- Set up a Python-based development environment.
-- Deploy a Flask application behind a web server.
-- Configure Nginx to serve requests from an application server.
-- Use process management tools to keep the application running.
-
 ## Requirements
 ### General
 - A `README.md` file at the root of the project is **mandatory**.
@@ -34,45 +26,6 @@ By the end of this project, you should be able to:
 
 ---
 
-## Tasks
-### 0. Set up Development with Python
-**Objective:** Deploy and serve the **Airbnb Clone v2 - Web framework** on `web-01`.
-
-#### Steps:
-1. Ensure that task #3 from your **SSH project** is completed for `web-01`.
-2. Install required packages:
-   ```bash
-   sudo apt update && sudo apt install -y net-tools
-   ```
-3. Clone the Airbnb Clone v2 repository onto `web-01`:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/AirBnB_clone_v2.git
-   ```
-4. Modify `web_flask/0-hello_route.py` to serve content at `/airbnb-onepage/` on port `5000`:
-   ```python
-   from flask import Flask
-   
-   app = Flask(__name__)
-
-   @app.route("/airbnb-onepage/")
-   def hello_hbnb():
-       return "Hello HBNB!"
-
-   if __name__ == "__main__":
-       app.run(host="0.0.0.0", port=5000)
-   ```
-5. Run the application:
-   ```bash
-   python3 -m web_flask.0-hello_route
-   ```
-6. Test the endpoint:
-   ```bash
-   curl 127.0.0.1:5000/airbnb-onepage/
-   ```
-   Expected output:
-   ```
-   Hello HBNB!
-   ```
 
 ## Repository Structure
 ```
